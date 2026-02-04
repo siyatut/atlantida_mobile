@@ -27,7 +27,7 @@ class HomeContent {
     HomeAdvantage(
       icon: Icons.local_shipping_outlined,
       title: 'Доставка на дом',
-      text: 'При покупке аквариума от 5\u00A0000\u00A0₽ доставим на дом.',
+      text: 'При покупке аквариума от 10\u00A0000\u00A0₽ доставим на дом.',
     ),
     HomeAdvantage(
       icon: Icons.attach_money,
