@@ -16,6 +16,9 @@ class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key, this.initialFilter});
   final String? initialFilter;
 
+  const _friendlyNetworkError =
+    'Не удалось загрузить каталог. Проверьте подключение к интернету и попробуйте ещё раз.';
+
   @override
   State<CatalogScreen> createState() => _CatalogScreenState();
 }
@@ -107,8 +110,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
       if (!mounted) return;
       setState(() => _cats = filteredTop);
     } catch (e) {
-      // ignore: avoid_print
-      print('Failed to load categories: $e');
+      debugPrint('Failed to load categories: $e');
     }
   }
 
@@ -142,9 +144,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
       if (_hasMore) _page += 1;
     });
   } catch (e) {
-    if (!mounted) return;
-    setState(() => _error = e.toString());
-  }
+  debugPrint('Failed to load products: $e');
+  if (!mounted) return;
+  setState(() => _error = _friendlyNetworkError);
+}
 
   if (!mounted) return;
 
