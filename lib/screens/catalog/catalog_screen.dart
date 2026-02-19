@@ -12,12 +12,12 @@ import 'widgets/catalog_product_tile.dart';
 import 'widgets/catalog_load_more_footer.dart';
 import 'widgets/catalog_states.dart';
 
+const String _friendlyNetworkError =
+    'Не удалось загрузить каталог. Проверьте подключение к интернету и попробуйте ещё раз.';
+
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key, this.initialFilter});
   final String? initialFilter;
-
-  const _friendlyNetworkError =
-    'Не удалось загрузить каталог. Проверьте подключение к интернету и попробуйте ещё раз.';
 
   @override
   State<CatalogScreen> createState() => _CatalogScreenState();
