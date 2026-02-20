@@ -1,11 +1,11 @@
 import 'package:url_launcher/url_launcher.dart';
 
-Future<void> makePhoneCall(String phoneNumber) async {
+Future<bool> makePhoneCall(String phoneNumber) async {
   final uri = Uri(scheme: 'tel', path: phoneNumber);
-  await _launchExternal(uri, error: 'Could not launch $phoneNumber');
+  return _launchSafely(uri);
 }
 
-Future<void> sendEmail({
+Future<bool> sendEmail({
   required String email,
   String? subject,
   String? body,
@@ -19,19 +19,24 @@ Future<void> sendEmail({
     }),
   );
 
-  await _launchExternal(uri, error: 'Could not send email to $email');
+  return _launchSafely(uri);
 }
 
-Future<void> openUrl(String url) async {
-  final uri = Uri.parse(url);
-  await _launchExternal(uri, error: 'Could not open $url');
+Future<bool> openUrl(String url) async {
+  final uri = Uri.parse(url.trim());
+  return _launchSafely(uri);
 }
 
-Future<void> _launchExternal(Uri uri, {required String error}) async {
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  } else {
-    throw Exception(error);
+Future<bool> _launchSafely(Uri uri) async {
+  try {
+    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (ok) return true;
+
+    return await launchUrl(uri);
+  } catch (e) {
+    // ignore: avoid_print
+    print('Could not open $uri: $e');
+    return false;
   }
 }
 
