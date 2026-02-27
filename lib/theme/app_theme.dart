@@ -4,34 +4,27 @@ import 'app_colors.dart';
 import 'app_typography.dart';
 
 class AppTheme {
-  // Светлая тема (Aqua Light)
   static ThemeData light() {
     final cs = ColorScheme.fromSeed(
       seedColor: AppColors.aqua,
       primary: AppColors.aqua,
       secondary: AppColors.seaGrass,
-      // базовые плоскости интерфейса
-      surface: AppColors.white, // карточки/поля
-      onSurface: AppColors.ink, // текст на поверхностях
-      surfaceContainerLowest: AppColors.mint, // мягкие панели/«блоки»
-      surfaceContainer: AppColors.lightBlue, // светлая голубая подложка
+      surface: AppColors.white,
+      onSurface: AppColors.ink,
+      surfaceContainerLowest: AppColors.mint,
+      surfaceContainer: AppColors.lightBlue,
     );
 
     final theme = _baseTheme(
       cs: cs,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: AppColors.ink,
+        foregroundColor: cs.onSurface,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 20,
-          color: AppColors.ink,
-        ),
       ),
       cardTheme: CardThemeData(
         color: AppColors.white,
@@ -45,7 +38,7 @@ class AppTheme {
         elevation: 0,
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-        indicatorColor: AppColors.aqua.withValues(alpha: .18),
+        indicatorColor: AppColors.aqua.withValues(alpha: .16),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
             size: 26,
@@ -68,7 +61,6 @@ class AppTheme {
       dividerColor: AppColors.aqua.withValues(alpha: .2),
     );
 
-    // Уникально для light (как и было)
     return theme.copyWith(
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -81,7 +73,6 @@ class AppTheme {
     );
   }
 
-  // Тёмная тема (Deep Ocean)
   static ThemeData dark() {
     final cs = ColorScheme.fromSeed(
       seedColor: AppColors.deepBlue,
@@ -94,19 +85,14 @@ class AppTheme {
 
     return _baseTheme(
       cs: cs,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: AppColors.white,
+        foregroundColor: cs.onSurface,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 20,
-          color: AppColors.white,
-        ),
       ),
       cardTheme: CardThemeData(
         color: const Color(0xFF0F1B2D),

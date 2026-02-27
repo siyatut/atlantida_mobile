@@ -30,7 +30,7 @@ class ProductDetailsScreen extends StatelessWidget {
           textAlign: TextAlign.center,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+          style: textTheme.titleLarge,
         ),
       ),
       body: SafeArea(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 
 import '../screens/about/about_screen.dart';
-import '../screens/catalog/catalog_screen.dart';
+import '../screens/catalog/catalog_home_screen.dart';
 import '../screens/contacts/contacts_screen.dart';
 import '../screens/home/home_screen.dart';
 
@@ -25,7 +25,7 @@ class _RootTabsState extends State<RootTabs> {
 
     _pages = [
       HomeScreen(onOpenCatalog: () => setState(() => _index = 1)),
-      const CatalogScreen(),
+      const CatalogHomeScreen(),
       AboutScreen(onOpenCatalog: () => setState(() => _index = 1)),
       const ContactsScreen(),
     ];
@@ -40,8 +40,9 @@ class _RootTabsState extends State<RootTabs> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          systemOverlayStyle:
-              isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+          systemOverlayStyle: isDark
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark,
           title: Text(_titles[_index]),
         ),
         body: Stack(
