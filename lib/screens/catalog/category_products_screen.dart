@@ -17,7 +17,7 @@ class CategoryProductsScreen extends StatefulWidget {
   const CategoryProductsScreen({
     super.key,
     required this.repo,
-    required this.category, // level2 категория
+    required this.category,
   });
 
   final WooRepository repo;
@@ -36,7 +36,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
 
   // level3
   List<WooCategory> _filters = const [];
-  int? _activeFilterId; // null = "Все"
+  int? _activeFilterId; 
 
   int _page = 1;
   static const int _perPage = 40;
@@ -52,11 +52,10 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     await _loadFilters();
     if (!mounted) return;
 
-    // по умолчанию: если есть level3 — выбираем первый, иначе "Все" (родитель)
     if (_filters.isNotEmpty) {
       _activeFilterId = _filters.first.id;
     } else {
-      _activeFilterId = null; // "Все"
+      _activeFilterId = null;
     }
 
     await _load(reset: true);
@@ -69,14 +68,12 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
       if (!mounted) return;
       setState(() => _filters = children);
     } catch (_) {
-      // если не загрузились фильтры — просто оставим пусто и покажем товары по родителю
       if (!mounted) return;
       setState(() => _filters = const []);
     }
   }
 
   int get _categoryIdForRequest {
-    // null = "Все" -> грузим по level2 категории
     return _activeFilterId ?? widget.category.id;
   }
 
@@ -213,7 +210,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           labelStyle: textTheme.labelLarge?.copyWith(
             color: selected ? Colors.white : cs.onSurface,
           ),
-          selectedColor: const Color(0xFF007FAF), // AppColors.teal у тебя
+          selectedColor: const Color(0xFF007FAF), 
           backgroundColor: cs.surface.withValues(alpha: .95),
           side: BorderSide(color: selected ? const Color(0xFF007FAF) : Colors.transparent),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
