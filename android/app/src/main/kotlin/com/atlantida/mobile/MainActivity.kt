@@ -1,4 +1,4 @@
-package com.example.atlantida_shop
+package com.atlantida.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
