@@ -1,6 +1,6 @@
 {
-    "name": "atlantida_shop",
-    "short_name": "atlantida_shop",
+    "name": "Atlantida",
+    "short_name": "Atlantida",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,4 +1,4 @@
-import 'package:atlantida_shop/core/env.dart';
+import 'package:atlantida_mobile/core/env.dart';
 
 class WooConfig {
   final String baseUrl;
