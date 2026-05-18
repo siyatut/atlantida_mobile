@@ -7,6 +7,7 @@ import '../../data/woo/woo_dto.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/launcher_utils.dart';
 import '../../utils/tab_scroll_padding.dart';
+import '../../utils/text_utils.dart';
 import '../../widgets/teal_card.dart';
 
 import 'home_content.dart';
@@ -401,14 +402,14 @@ class _AdvantageRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  advantage.title,
+                  fixPrepositions(advantage.title),
                   style: t.titleSmall?.copyWith(
                     color: cs.onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  advantage.text,
+                  fixPrepositions(advantage.text),
                   style: t.bodyMedium?.copyWith(
                     color: AppColors.softInk,
                     height: 1.35,
