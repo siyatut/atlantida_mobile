@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          SliverToBoxAdapter(child: SizedBox(height: pad.bottom + 16)),
+          SliverToBoxAdapter(child: SizedBox(height: pad.bottom + 4)),
         ],
       ),
     );
