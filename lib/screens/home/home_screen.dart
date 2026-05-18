@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.only(left: 20, bottom: 12),
               child: Text(
-                'Преимущества заказа у нас',
+                'Преимущества покупки у нас',
                 style: t.titleMedium?.copyWith(
                   color: AppColors.deepBlue,
                   fontWeight: FontWeight.w700,

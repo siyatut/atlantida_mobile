@@ -27,17 +27,17 @@ class HomeContent {
     HomeAdvantage(
       icon: Icons.local_shipping_outlined,
       title: 'Доставка на дом',
-      text: 'При покупке аквариума от 10\u00A0000\u00A0₽ доставим на дом.',
+      text: 'При покупке аквариума от 10\u00A0000\u00A0₽ бесплатно доставим на дом.',
     ),
     HomeAdvantage(
       icon: Icons.attach_money,
       title: 'Держим низкие цены',
-      text: 'Более 11 лет мы предлагаем товары по доступным ценам.',
+      text: 'Более 11 лет предлагаем товары по доступным ценам.',
     ),
     HomeAdvantage(
       icon: Icons.inventory_2_outlined,
       title: 'Большой ассортимент',
-      text: 'Аквариумы, фильтры, корма, игрушки и многое другое.',
+      text: 'Аквариумы, оборудование, живые растения и рыбки',
     ),
     HomeAdvantage(
       icon: Icons.support_agent_outlined,
