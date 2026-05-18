@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../context/favorites_provider.dart';
 import '../../../domain/product.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/product_image_box.dart';
-import '../../../widgets/yellow_button.dart';
 
 class CatalogProductTile extends StatelessWidget {
   const CatalogProductTile({
@@ -19,72 +19,98 @@ class CatalogProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final cs = Theme.of(context).colorScheme;
+    final favorites = FavoritesProvider.of(context);
+    final isFav = favorites.isFavorite(product.id);
 
-    return _Card(
-      child: Row(
-        children: [
-          const SizedBox(width: 6),
-          Expanded(child: _ProductImage(url: product.image)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: onOpenDetails,
+      child: Container(
+        decoration: BoxDecoration(
+          color: cs.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: .10),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
               children: [
-                Text(
-                  product.title,
-                  style: textTheme.titleMedium?.copyWith(
-                    color: cs.onSurface,
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: ProductImageBox(imageUrl: product.image, borderRadius: 0),
                   ),
                 ),
-                const SizedBox(height: 8),
-                _PriceText(price: product.price),
-                const SizedBox(height: 12),
-                YellowButton(
-                  text: 'Подробнее',
-                  onTap: onOpenDetails,
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: _FavButton(
+                    isFavorite: isFav,
+                    onTap: () => favorites.toggle(product),
+                  ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: 8),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: cs.onSurface,
+                        fontWeight: FontWeight.w500,
+                        height: 1.3,
+                      ),
+                    ),
+                    const Spacer(),
+                    _PriceText(price: product.price),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _Card extends StatelessWidget {
-  const _Card({required this.child});
-  final Widget child;
+class _FavButton extends StatelessWidget {
+  const _FavButton({required this.isFavorite, required this.onTap});
+
+  final bool isFavorite;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Container(
-      decoration: BoxDecoration(
-        color: cs.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .20),
-            blurRadius: 14,
-            offset: const Offset(0, 8),
-          ),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: .85),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          isFavorite ? Icons.favorite : Icons.favorite_outline,
+          size: 18,
+          color: isFavorite ? Colors.red : AppColors.softInk,
+        ),
       ),
-      padding: const EdgeInsets.all(14),
-      child: child,
     );
-  }
-}
-
-class _ProductImage extends StatelessWidget {
-  const _ProductImage({this.url});
-  final String? url;
-
-  @override
-  Widget build(BuildContext context) {
-    return ProductImageBox(imageUrl: url, borderRadius: 12);
   }
 }
 
@@ -94,14 +120,14 @@ class _PriceText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base = Theme.of(context).textTheme.bodyMedium;
+    final base = Theme.of(context).textTheme.bodySmall;
     final hasPrice = price != null && price!.isNotEmpty;
 
     return Text(
-      hasPrice ? '$price руб.' : 'Цена по запросу',
+      hasPrice ? '$price ₽' : 'Цена по запросу',
       style: base?.copyWith(
         fontWeight: FontWeight.w700,
-        color: hasPrice ? AppColors.deepBlue : AppColors.softInk,
+        color: hasPrice ? AppColors.aqua : AppColors.softInk,
       ),
     );
   }
