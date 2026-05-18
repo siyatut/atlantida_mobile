@@ -125,56 +125,43 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_categories.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Категории',
-                        style: t.titleMedium?.copyWith(
-                          color: AppColors.deepBlue,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: widget.onOpenCatalog,
-                      child: Text(
-                        'Все',
-                        style: t.bodyMedium?.copyWith(
-                          color: AppColors.aqua,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'Категории',
+                  style: t.titleMedium?.copyWith(
+                    color: AppColors.deepBlue,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 12)),
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 104,
-                child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (_, i) {
-                    final c = _categories[i];
-                    return _CategoryChip(
-                      label: c.name,
-                      svgPath: _svgForSlug[c.slug.toLowerCase()],
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => CategoryLevelScreen(
-                            repo: _repo,
-                            parent: c,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  height: 104,
+                  child: ListView.separated(
+                    padding: EdgeInsets.zero,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _categories.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (_, i) {
+                      final c = _categories[i];
+                      return _CategoryChip(
+                        label: c.name,
+                        svgPath: _svgForSlug[c.slug.toLowerCase()],
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => CategoryLevelScreen(
+                              repo: _repo,
+                              parent: c,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
