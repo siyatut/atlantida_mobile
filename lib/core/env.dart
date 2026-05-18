@@ -22,4 +22,7 @@ class Env {
       _values[key] ?? defaultValue;
 
   static bool get isLoaded => _loaded;
+
+  static String get strapiApiUrl =>
+      get('STRAPI_API_URL', defaultValue: 'http://localhost:1337');
 }
