@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../context/favorites_provider.dart';
+import '../../core/constants/app_contacts.dart';
 import '../../domain/product.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/launcher_utils.dart';
 import '../../utils/text_utils.dart';
+import '../../widgets/teal_card.dart';
 
 import 'utils/product_description_parser.dart';
-import 'widgets/product_details_contact_card.dart';
 import 'widgets/product_details_description_card.dart';
 import 'widgets/product_details_image_card.dart';
 
@@ -17,7 +19,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final t = Theme.of(context).textTheme;
     final favorites = FavoritesProvider.of(context);
 
     final description = fixPrepositions(
@@ -32,19 +34,16 @@ class ProductDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // image with top padding so floating buttons don't overlap
+                  const SizedBox(height: 8),
+                  ProductDetailsImageCard(imageUrl: product.image),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: ProductDetailsImageCard(imageUrl: product.image),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           splitTitleInTwo(product.title),
-                          style: textTheme.titleLarge?.copyWith(
+                          style: t.titleLarge?.copyWith(
                             color: AppColors.deepBlue,
                             fontWeight: FontWeight.w700,
                           ),
@@ -54,7 +53,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           const SizedBox(height: 6),
                           Text(
                             '${product.price} ₽',
-                            style: textTheme.titleMedium?.copyWith(
+                            style: t.headlineSmall?.copyWith(
                               color: AppColors.aqua,
                               fontWeight: FontWeight.w700,
                             ),
@@ -62,9 +61,24 @@ class ProductDetailsScreen extends StatelessWidget {
                         ],
                         const SizedBox(height: 20),
                         ProductDetailsDescriptionCard(text: description),
-                        const SizedBox(height: 16),
-                        ProductDetailsContactCard(productTitle: product.title),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 20),
+                        Text(
+                          'Остались вопросы?',
+                          style: t.titleMedium?.copyWith(
+                            color: AppColors.deepBlue,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TealCtaCard(
+                          onCall: () => makePhoneCall(AppContacts.phone),
+                          onWrite: () => sendEmail(
+                            email: AppContacts.email,
+                            subject: 'Вопрос по товару из приложения',
+                            body:
+                                'Здравствуйте! Хочу уточнить наличие и стоимость товара «${product.title}».',
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -78,8 +92,8 @@ class ProductDetailsScreen extends StatelessWidget {
               left: 12,
               child: _FloatingButton(
                 onTap: () => Navigator.of(context).pop(),
-                child: const Icon(Icons.arrow_back, size: 22,
-                    color: AppColors.deepBlue),
+                child: const Icon(Icons.chevron_left,
+                    size: 22, color: AppColors.deepBlue),
               ),
             ),
 
@@ -90,13 +104,13 @@ class ProductDetailsScreen extends StatelessWidget {
               child: ListenableBuilder(
                 listenable: favorites,
                 builder: (context, _) {
-                  final isFavNow = favorites.isFavorite(product.id);
+                  final isFav = favorites.isFavorite(product.id);
                   return _FloatingButton(
                     onTap: () => favorites.toggle(product),
                     child: Icon(
-                      isFavNow ? Icons.favorite : Icons.favorite_outline,
+                      isFav ? Icons.favorite : Icons.favorite_outline,
                       size: 22,
-                      color: isFavNow ? Colors.red : AppColors.softInk,
+                      color: isFav ? Colors.red : AppColors.softInk,
                     ),
                   );
                 },
