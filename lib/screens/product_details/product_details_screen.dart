@@ -34,10 +34,46 @@ class ProductDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 8),
-                  ProductDetailsImageCard(imageUrl: product.image),
+                  const SizedBox(height: 20),
+                  Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: ProductDetailsImageCard(imageUrl: product.image),
+                      ),
+                      Positioned(
+                        top: 8,
+                        left: 32,
+                        child: _FloatingButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: const Icon(Icons.chevron_left,
+                              size: 22, color: AppColors.deepBlue),
+                        ),
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 32,
+                        child: ListenableBuilder(
+                          listenable: favorites,
+                          builder: (context, _) {
+                            final isFav = favorites.isFavorite(product.id);
+                            return _FloatingButton(
+                              onTap: () => favorites.toggle(product),
+                              child: Icon(
+                                isFav
+                                    ? Icons.favorite
+                                    : Icons.favorite_outline,
+                                size: 22,
+                                color: isFav ? Colors.red : AppColors.softInk,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -86,36 +122,7 @@ class ProductDetailsScreen extends StatelessWidget {
               ),
             ),
 
-            // floating back button
-            Positioned(
-              top: 12,
-              left: 12,
-              child: _FloatingButton(
-                onTap: () => Navigator.of(context).pop(),
-                child: const Icon(Icons.chevron_left,
-                    size: 22, color: AppColors.deepBlue),
-              ),
-            ),
 
-            // floating favorites button
-            Positioned(
-              top: 12,
-              right: 12,
-              child: ListenableBuilder(
-                listenable: favorites,
-                builder: (context, _) {
-                  final isFav = favorites.isFavorite(product.id);
-                  return _FloatingButton(
-                    onTap: () => favorites.toggle(product),
-                    child: Icon(
-                      isFav ? Icons.favorite : Icons.favorite_outline,
-                      size: 22,
-                      color: isFav ? Colors.red : AppColors.softInk,
-                    ),
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
