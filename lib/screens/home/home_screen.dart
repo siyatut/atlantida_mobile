@@ -9,6 +9,7 @@ import '../../utils/launcher_utils.dart';
 import '../../utils/tab_scroll_padding.dart';
 import '../../utils/text_utils.dart';
 import '../../widgets/teal_card.dart';
+import '../catalog/category_level_screen.dart';
 
 import 'home_content.dart';
 
@@ -153,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 12)),
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 88,
+                height: 104,
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   scrollDirection: Axis.horizontal,
@@ -164,7 +165,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     return _CategoryChip(
                       label: c.name,
                       svgPath: _svgForSlug[c.slug.toLowerCase()],
-                      onTap: widget.onOpenCatalog,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => CategoryLevelScreen(
+                            repo: _repo,
+                            parent: c,
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -309,15 +317,15 @@ class _CategoryChip extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 56,
-            height: 56,
+            width: 68,
+            height: 68,
             decoration: BoxDecoration(
               color: AppColors.mint,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(18),
             ),
             child: svgPath != null
                 ? Padding(
-                    padding: const EdgeInsets.all(13),
+                    padding: const EdgeInsets.all(16),
                     child: SvgPicture.asset(
                       svgPath!,
                       colorFilter: const ColorFilter.mode(
