@@ -61,7 +61,7 @@ class CategoryCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle!,
-                      style: t.bodySmall?.copyWith(
+                      style: t.bodyMedium?.copyWith(
                         color: cs.onSurface.withValues(alpha: .7),
                         height: 1.2,
                       ),

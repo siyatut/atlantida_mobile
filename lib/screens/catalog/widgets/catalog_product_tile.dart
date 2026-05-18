@@ -68,7 +68,7 @@ class CatalogProductTile extends StatelessWidget {
                       product.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: textTheme.bodySmall?.copyWith(
+                      style: textTheme.bodyMedium?.copyWith(
                         color: cs.onSurface,
                         fontWeight: FontWeight.w500,
                         height: 1.3,
@@ -120,7 +120,7 @@ class _PriceText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base = Theme.of(context).textTheme.bodySmall;
+    final base = Theme.of(context).textTheme.bodyMedium;
     final hasPrice = price != null && price!.isNotEmpty;
 
     return Text(

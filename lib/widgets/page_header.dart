@@ -47,7 +47,7 @@ class PageHeader extends StatelessWidget {
                 if (subtitle != null)
                   Text(
                     subtitle!,
-                    style: t.bodySmall?.copyWith(color: AppColors.softInk),
+                    style: t.bodyMedium?.copyWith(color: AppColors.softInk),
                   ),
               ],
             ),
