@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_contacts.dart';
+import '../../theme/app_colors.dart';
 import '../../utils/launcher_utils.dart';
 import '../../utils/tab_scroll_padding.dart';
 import '../../utils/spacing.dart';
 import '../../utils/text_utils.dart';
 import '../../widgets/yellow_button.dart';
+import '../contacts/contacts_content.dart';
 
 import 'about_content.dart';
 import 'widgets/about_accordion_item.dart';
@@ -130,24 +132,109 @@ class AboutScreen extends StatelessWidget {
           ),
           const SliverToBoxAdapter(child: gap12),
 
-          // 6) Контакты / CTA
+          // 6) Контакты
           SliverToBoxAdapter(
             child: AboutSurfaceCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const AboutSectionTitle('Связаться с нами'),
-                  gap8,
-                  Text(
-                    fixPrepositions(
-                      'Если нужна помощь с выбором — позвоните или напишите нам.',
+                  const AboutSectionTitle('Контакты'),
+                  gap12,
+
+                  // phones
+                  for (final p in ContactsContent.phones) ...[
+                    _ContactRow(
+                      icon: Icons.call_outlined,
+                      title: p.title,
+                      subtitle: p.phoneUi,
+                      onTap: () => makePhoneCall(p.tel),
                     ),
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurface.withValues(alpha: .85),
-                      height: 1.3,
-                    ),
+                    gap8,
+                  ],
+
+                  // telegram
+                  _ContactRow(
+                    icon: Icons.send_outlined,
+                    title: 'Telegram',
+                    subtitle: '@gagin645',
+                    onTap: () => openUrl(ContactsContent.telegramUrl),
+                  ),
+                  gap16,
+
+                  // address
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.location_on_outlined,
+                          color: AppColors.teal, size: 22),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              ContactsContent.addressTitleUi(),
+                              style: textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: cs.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              ContactsContent.addressSubtitleUi(),
+                              style: textTheme.bodySmall?.copyWith(
+                                color: cs.onSurface.withValues(alpha: .7),
+                                height: 1.35,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   gap12,
+
+                  // map buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              openUrl(ContactsContent.yandexRouteUrl),
+                          icon: const Icon(Icons.map_outlined, size: 18),
+                          label: const Text('Яндекс Карты'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.teal,
+                            side: const BorderSide(color: AppColors.teal),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ),
+                      hGap(10),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              openUrl(ContactsContent.googleRouteUrl),
+                          icon: const Icon(Icons.directions_outlined, size: 18),
+                          label: const Text('Google Maps'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.teal,
+                            side: const BorderSide(color: AppColors.teal),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  gap16,
+
+                  // call / write
                   Row(
                     children: [
                       Expanded(
@@ -205,6 +292,61 @@ class AboutScreen extends StatelessWidget {
             gap8,
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _ContactRow extends StatelessWidget {
+  const _ContactRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final cs = Theme.of(context).colorScheme;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.teal, size: 20),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: textTheme.labelMedium?.copyWith(
+                    color: cs.onSurface.withValues(alpha: .6),
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: AppColors.teal,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Icon(Icons.chevron_right,
+                color: cs.onSurface.withValues(alpha: .3), size: 18),
+          ],
+        ),
       ),
     );
   }
