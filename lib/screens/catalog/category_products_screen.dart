@@ -4,6 +4,7 @@ import '../../data/strapi/strapi_repository.dart';
 import '../../data/woo/woo_dto.dart';
 import '../../domain/product.dart';
 import '../../utils/tab_scroll_padding.dart';
+import '../../widgets/page_header.dart';
 import '../product_details/product_details_screen.dart';
 
 import 'widgets/catalog_product_tile.dart';
@@ -17,10 +18,12 @@ class CategoryProductsScreen extends StatefulWidget {
     super.key,
     required this.repo,
     required this.category,
+    this.parentName,
   });
 
   final StrapiRepository repo;
   final WooCategory category;
+  final String? parentName;
 
   @override
   State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
@@ -49,13 +52,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   Future<void> _init() async {
     await _loadFilters();
     if (!mounted) return;
-
-    if (_filters.isNotEmpty) {
-      _activeFilterId = _filters.first.id;
-    } else {
-      _activeFilterId = null;
-    }
-
+    _activeFilterId = _filters.isNotEmpty ? _filters.first.id : null;
     await _load(reset: true);
   }
 
@@ -93,9 +90,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
         perPage: _perPage,
         categoryId: _categoryIdForRequest,
       );
-
       if (!mounted) return;
-
       setState(() {
         _items = [..._items, ...data];
         _hasMore = data.length == _perPage;
@@ -107,7 +102,6 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     }
 
     if (!mounted) return;
-
     setState(() {
       if (reset) {
         _loading = false;
@@ -122,34 +116,37 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     final products = _items;
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.category.name)),
-      body: Column(
-        children: [
-          if (_filters.isNotEmpty) _buildChips(context),
-
-          if (_loading) const Expanded(child: CatalogLoadingView()),
-
-          if (!_loading && _error != null)
-            Expanded(
-              child: CatalogErrorView(
-                error: _error!,
-                onRetry: () => _load(reset: true),
-              ),
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PageHeader(
+              title: widget.category.name,
+              subtitle: widget.parentName,
+              onBack: () => Navigator.of(context).pop(),
             ),
+            const SizedBox(height: 8),
 
-          if (!_loading && _error == null)
-            Expanded(
-              child: SafeArea(
-                top: false,
-                bottom: false,
+            if (_filters.isNotEmpty) _buildChips(context),
+
+            if (_loading) const Expanded(child: CatalogLoadingView()),
+
+            if (!_loading && _error != null)
+              Expanded(
+                child: CatalogErrorView(
+                  error: _error!,
+                  onRetry: () => _load(reset: true),
+                ),
+              ),
+
+            if (!_loading && _error == null)
+              Expanded(
                 child: RefreshIndicator(
                   onRefresh: () => _load(reset: true),
                   child: GridView.builder(
-                    padding: tabScrollPadding(context).copyWith(
-                      left: 12,
-                      right: 12,
-                      top: 12,
-                    ),
+                    padding: tabScrollPadding(context)
+                        .copyWith(left: 12, right: 12, top: 12),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -165,25 +162,22 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                           onTap: () => _load(),
                         );
                       }
-
                       final item = products[i];
                       return CatalogProductTile(
                         product: item,
-                        onOpenDetails: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ProductDetailsScreen(product: item),
-                            ),
-                          );
-                        },
+                        onOpenDetails: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                ProductDetailsScreen(product: item),
+                          ),
+                        ),
                       );
                     },
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -217,26 +211,22 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
           ),
           selectedColor: const Color(0xFF007FAF),
           backgroundColor: Colors.white,
-          side: BorderSide(
-            color: selected ? const Color(0xFF007FAF) : const Color(0xFF007FAF),
-          ),
+          side: const BorderSide(color: Color(0xFF007FAF)),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         ),
       );
     }
 
-    final allSelected = _activeFilterId == null;
-
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
           chip(
-            selected: allSelected,
-            label: 'Все',
+            selected: _activeFilterId == null,
+            label: 'Все товары',
             onTap: () {
               setState(() => _activeFilterId = null);
               _load(reset: true);
@@ -268,10 +258,7 @@ class _LoadMoreCell extends StatelessWidget {
     return Center(
       child: loading
           ? const CircularProgressIndicator()
-          : TextButton(
-              onPressed: onTap,
-              child: const Text('Загрузить ещё'),
-            ),
+          : TextButton(onPressed: onTap, child: const Text('Загрузить ещё')),
     );
   }
 }

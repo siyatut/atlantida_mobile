@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../data/strapi/strapi_repository.dart';
-import '../../data/woo/category_tree.dart';
+
 import '../../data/woo/woo_dto.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/tab_scroll_padding.dart';
+import '../../widgets/page_header.dart';
 
 import 'category_level_screen.dart';
 
 class CatalogHomeScreen extends StatefulWidget {
-  const CatalogHomeScreen({super.key});
+  const CatalogHomeScreen({super.key, this.onGoHome});
+
+  final VoidCallback? onGoHome;
 
   @override
   State<CatalogHomeScreen> createState() => _CatalogHomeScreenState();
@@ -22,7 +25,6 @@ class _CatalogHomeScreenState extends State<CatalogHomeScreen> {
   bool _loading = true;
   String? _error;
 
-  CategoryTree? _tree;
   List<WooCategory> _top = const [];
 
   static const _orderedSlugs = [
@@ -69,7 +71,6 @@ class _CatalogHomeScreenState extends State<CatalogHomeScreen> {
 
       if (!mounted) return;
       setState(() {
-        _tree = tree;
         _top = top;
         _loading = false;
       });
@@ -84,74 +85,64 @@ class _CatalogHomeScreenState extends State<CatalogHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    if (_loading) return const Center(child: CircularProgressIndicator());
-
-    if (_error != null || _tree == null) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(_error ?? 'Ошибка'),
-            const SizedBox(height: 12),
-            FilledButton(onPressed: _load, child: const Text('Повторить')),
-          ],
-        ),
-      );
-    }
-
     return SafeArea(
       bottom: false,
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-              child: Text(
-                'Каталог',
-                style: textTheme.headlineSmall?.copyWith(
-                  color: AppColors.deepBlue,
-                  fontWeight: FontWeight.w700,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PageHeader(
+            title: 'Каталог',
+            subtitle: 'Выберите категорию',
+            onBack: widget.onGoHome,
+          ),
+          const SizedBox(height: 12),
+          if (_loading)
+            const Expanded(child: Center(child: CircularProgressIndicator())),
+          if (!_loading && _error != null)
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(_error!),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                        onPressed: _load, child: const Text('Повторить')),
+                  ],
                 ),
               ),
             ),
-          ),
-          SliverPadding(
-            padding: tabScrollPadding(context).copyWith(
-              left: 16,
-              right: 16,
-              top: 0,
-            ),
-            sliver: SliverList.separated(
-              itemCount: _top.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (_, i) {
-                final c = _top[i];
-                final svgPath = _svgForSlug[c.slug.toLowerCase()];
-                return _CategoryRow(
-                  title: c.name,
-                  svgPath: svgPath,
-                  onTap: () {
-                    Navigator.of(context).push(
+          if (!_loading && _error == null)
+            Expanded(
+              child: ListView.separated(
+                padding: tabScrollPadding(context)
+                    .copyWith(left: 16, right: 16, top: 4),
+                itemCount: _top.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (_, i) {
+                  final c = _top[i];
+                  final svgPath = _svgForSlug[c.slug.toLowerCase()];
+                  return _CategoryCard(
+                    title: c.name,
+                    svgPath: svgPath,
+                    onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) =>
                             CategoryLevelScreen(repo: _repo, parent: c),
                       ),
-                    );
-                  },
-                );
-              },
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 }
 
-class _CategoryRow extends StatelessWidget {
-  const _CategoryRow({
+class _CategoryCard extends StatelessWidget {
+  const _CategoryCard({
     required this.title,
     required this.onTap,
     this.svgPath,
@@ -166,46 +157,65 @@ class _CategoryRow extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final t = Theme.of(context).textTheme;
 
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: AppColors.mint,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: svgPath != null
-                  ? Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: SvgPicture.asset(
-                        svgPath!,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.teal,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    )
-                  : const Icon(Icons.category_outlined,
-                      color: AppColors.teal, size: 22),
+    return Material(
+      color: cs.surface,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.aqua.withValues(alpha: .15),
             ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                title,
-                style: t.bodyLarge?.copyWith(
-                  color: cs.onSurface,
-                  fontWeight: FontWeight.w500,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: .06),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+            color: cs.surface,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.mint,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: svgPath != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: SvgPicture.asset(
+                          svgPath!,
+                          colorFilter: const ColorFilter.mode(
+                            AppColors.teal,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      )
+                    : const Icon(Icons.category_outlined,
+                        color: AppColors.teal, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  style: t.bodyLarge?.copyWith(
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            Icon(Icons.chevron_right,
-                color: cs.onSurface.withValues(alpha: .4), size: 22),
-          ],
+              Icon(Icons.chevron_right,
+                  color: cs.onSurface.withValues(alpha: .35), size: 22),
+            ],
+          ),
         ),
       ),
     );
