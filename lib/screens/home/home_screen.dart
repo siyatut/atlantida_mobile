@@ -7,6 +7,7 @@ import '../../data/woo/woo_dto.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/launcher_utils.dart';
 import '../../utils/tab_scroll_padding.dart';
+import '../../widgets/teal_card.dart';
 
 import 'home_content.dart';
 
@@ -29,12 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<WooCategory> _categories = const [];
 
   static const _orderedSlugs = [
-    'rybki',
-    'gryzuny',
-    'koshki',
-    'sobaki',
-    'pticzy',
-    'reptilii',
+    'rybki', 'gryzuny', 'koshki', 'sobaki', 'pticzy', 'reptilii',
   ];
 
   static const _svgForSlug = {
@@ -58,29 +54,27 @@ class _HomeScreenState extends State<HomeScreen> {
       final top = tree.all
           .where((c) => c.parent == 0)
           .where((c) => _orderedSlugs.contains(c.slug.toLowerCase()))
-          .toList();
-
-      top.sort((a, b) => _orderedSlugs
-          .indexOf(a.slug.toLowerCase())
-          .compareTo(_orderedSlugs.indexOf(b.slug.toLowerCase())));
-
+          .toList()
+        ..sort((a, b) => _orderedSlugs
+            .indexOf(a.slug.toLowerCase())
+            .compareTo(_orderedSlugs.indexOf(b.slug.toLowerCase())));
       if (mounted) setState(() => _categories = top);
     } catch (_) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final t = Theme.of(context).textTheme;
     final pad = tabScrollPadding(context);
 
     return SafeArea(
       bottom: false,
       child: CustomScrollView(
         slivers: [
-          // header row: title + subtitle + favorites button
+          // ── Header ──────────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 16, 0),
+              padding: const EdgeInsets.fromLTRB(20, 16, 8, 0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -90,16 +84,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           'Атлантида',
-                          style: textTheme.headlineMedium?.copyWith(
+                          style: t.headlineMedium?.copyWith(
                             color: AppColors.deepBlue,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
                         Text(
                           'Зоомагазин и аквариумистика',
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.softInk,
-                          ),
+                          style: t.bodyMedium?.copyWith(
+                              color: AppColors.softInk),
                         ),
                       ],
                     ),
@@ -108,7 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: widget.onOpenFavorites,
                     icon: const Icon(Icons.favorite_outline,
                         color: AppColors.softInk),
-                    tooltip: 'Избранное',
                   ),
                 ],
               ),
@@ -117,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
-          // promo banner
+          // ── Promo banner ─────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -125,22 +117,39 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-          // category scroll (only when loaded)
+          // ── Categories ───────────────────────────────────────────────
           if (_categories.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, bottom: 12),
-                child: Text(
-                  'Категории',
-                  style: textTheme.titleMedium?.copyWith(
-                    color: AppColors.deepBlue,
-                    fontWeight: FontWeight.w700,
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Категории',
+                        style: t.titleMedium?.copyWith(
+                          color: AppColors.deepBlue,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: widget.onOpenCatalog,
+                      child: Text(
+                        'Все',
+                        style: t.bodyMedium?.copyWith(
+                          color: AppColors.aqua,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 88,
@@ -151,26 +160,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   separatorBuilder: (_, __) => const SizedBox(width: 12),
                   itemBuilder: (_, i) {
                     final c = _categories[i];
-                    final svg = _svgForSlug[c.slug.toLowerCase()];
                     return _CategoryChip(
                       label: c.name,
-                      svgPath: svg,
+                      svgPath: _svgForSlug[c.slug.toLowerCase()],
                       onTap: widget.onOpenCatalog,
                     );
                   },
                 ),
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
 
-          // advantages
+          // ── Advantages ───────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(left: 20, bottom: 12),
               child: Text(
-                'Преимущества',
-                style: textTheme.titleMedium?.copyWith(
+                'Преимущества заказа у нас',
+                style: t.titleMedium?.copyWith(
                   color: AppColors.deepBlue,
                   fontWeight: FontWeight.w700,
                 ),
@@ -180,22 +188,36 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  for (final adv in HomeContent.advantages)
-                    _AdvantageRow(advantage: adv),
-                ],
-              ),
+              child: _AdvantagesCard(),
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-          // CTA card
+          // ── CTA ──────────────────────────────────────────────────────
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, bottom: 12),
+              child: Text(
+                'Остались вопросы?',
+                style: t.titleMedium?.copyWith(
+                  color: AppColors.deepBlue,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _CtaCard(),
+              child: TealCtaCard(
+                onCall: () => makePhoneCall(AppContacts.phone),
+                onWrite: () => sendEmail(
+                  email: AppContacts.email,
+                  subject: 'Вопрос из приложения',
+                  body: 'Здравствуйте! Хочу уточнить детали…',
+                ),
+              ),
             ),
           ),
 
@@ -206,10 +228,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// ── Promo banner ──────────────────────────────────────────────────────────────
+
 class _PromoBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final t = Theme.of(context).textTheme;
 
     return Container(
       decoration: BoxDecoration(
@@ -221,28 +245,36 @@ class _PromoBanner extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(20),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       child: Row(
         children: [
-          const Icon(Icons.local_shipping_outlined,
-              color: Colors.white, size: 32),
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: .15),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Icon(Icons.local_shipping_outlined,
+                color: Colors.white, size: 26),
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Бесплатная доставка аквариума',
-                  style: textTheme.titleSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
+                  'При заказе от 10 000 ₽',
+                  style: t.bodySmall?.copyWith(
+                    color: Colors.white.withValues(alpha: .8),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
-                  'При заказе от 10 000 ₽',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: .85),
+                  'Бесплатная доставка аквариума',
+                  style: t.titleSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -253,6 +285,8 @@ class _PromoBanner extends StatelessWidget {
     );
   }
 }
+
+// ── Category chip ─────────────────────────────────────────────────────────────
 
 class _CategoryChip extends StatelessWidget {
   const _CategoryChip({
@@ -267,7 +301,7 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final t = Theme.of(context).textTheme;
 
     return GestureDetector(
       onTap: onTap,
@@ -297,10 +331,40 @@ class _CategoryChip extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             label,
-            style: textTheme.labelSmall?.copyWith(color: AppColors.deepBlue),
+            style: t.labelSmall?.copyWith(color: AppColors.deepBlue),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Advantages card ───────────────────────────────────────────────────────────
+
+class _AdvantagesCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .06),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
+      child: Column(
+        children: [
+          for (final adv in HomeContent.advantages)
+            _AdvantageRow(advantage: adv),
         ],
       ),
     );
@@ -314,7 +378,7 @@ class _AdvantageRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final t = Theme.of(context).textTheme;
     final cs = Theme.of(context).colorScheme;
 
     return Padding(
@@ -326,10 +390,10 @@ class _AdvantageRow extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.mint,
+              color: AppColors.teal,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(advantage.icon, color: AppColors.teal, size: 22),
+            child: Icon(advantage.icon, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -338,7 +402,7 @@ class _AdvantageRow extends StatelessWidget {
               children: [
                 Text(
                   advantage.title,
-                  style: textTheme.bodyMedium?.copyWith(
+                  style: t.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: cs.onSurface,
                   ),
@@ -346,88 +410,13 @@ class _AdvantageRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   advantage.text,
-                  style: textTheme.bodySmall?.copyWith(
+                  style: t.bodySmall?.copyWith(
                     color: AppColors.softInk,
                     height: 1.35,
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CtaCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final cs = Theme.of(context).colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: cs.surface,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .08),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Остались вопросы?',
-            style: textTheme.titleMedium?.copyWith(
-              color: AppColors.deepBlue,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Позвоните или напишите — поможем с выбором.',
-            style: textTheme.bodySmall?.copyWith(
-              color: AppColors.softInk,
-              height: 1.35,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () => makePhoneCall(AppContacts.phone),
-                  icon: const Icon(Icons.call, size: 18),
-                  label: const Text('Позвонить'),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => sendEmail(
-                    email: AppContacts.email,
-                    subject: 'Вопрос из приложения',
-                    body: 'Здравствуйте! Хочу уточнить детали…',
-                  ),
-                  icon: const Icon(Icons.email_outlined, size: 18),
-                  label: const Text('Написать'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.teal,
-                    side: const BorderSide(color: AppColors.teal),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),
