@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../data/strapi/strapi_repository.dart';
 import '../../data/woo/category_tree.dart';
@@ -32,6 +33,15 @@ class _CatalogHomeScreenState extends State<CatalogHomeScreen> {
     'pticzy',
     'reptilii',
   ];
+
+  static const _svgForSlug = {
+    'rybki': 'assets/images/icons_category/fish.svg',
+    'koshki': 'assets/images/icons_category/cat.svg',
+    'sobaki': 'assets/images/icons_category/dog.svg',
+    'pticzy': 'assets/images/icons_category/bird.svg',
+    'gryzuny': 'assets/images/icons_category/mouse.svg',
+    'reptilii': 'assets/images/icons_category/reptile.svg',
+  };
 
   @override
   void initState() {
@@ -74,6 +84,8 @@ class _CatalogHomeScreenState extends State<CatalogHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     if (_loading) return const Center(child: CircularProgressIndicator());
 
     if (_error != null || _tree == null) {
@@ -90,66 +102,63 @@ class _CatalogHomeScreenState extends State<CatalogHomeScreen> {
     }
 
     return SafeArea(
-      top: false,
       bottom: false,
-      child: ListView.separated(
-        padding: tabScrollPadding(context),
-        itemCount: _top.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
-        itemBuilder: (_, i) {
-          final c = _top[i];
-          return _BigCategoryCell(
-            title: c.name,
-            subtitle: _subtitleForSlug(c.slug),
-            imageAsset: _imageForSlug(c.slug), 
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => CategoryLevelScreen(repo: _repo, parent: c),
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+              child: Text(
+                'Каталог',
+                style: textTheme.headlineSmall?.copyWith(
+                  color: AppColors.deepBlue,
+                  fontWeight: FontWeight.w700,
                 ),
-              );
-            },
-          );
-        },
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: tabScrollPadding(context).copyWith(
+              left: 16,
+              right: 16,
+              top: 0,
+            ),
+            sliver: SliverList.separated(
+              itemCount: _top.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
+              itemBuilder: (_, i) {
+                final c = _top[i];
+                final svgPath = _svgForSlug[c.slug.toLowerCase()];
+                return _CategoryRow(
+                  title: c.name,
+                  svgPath: svgPath,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            CategoryLevelScreen(repo: _repo, parent: c),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
-
-  String _subtitleForSlug(String slug) {
-    switch (slug.toLowerCase()) {
-      case 'rybki':
-        return 'Рыбки, аквариумы, корма и всё для ухода';
-      case 'gryzuny':
-        return 'Клетки, корма, игрушки и аксессуары';
-      case 'koshki':
-        return 'Корма, наполнители, уход и аксессуары';
-      case 'sobaki':
-        return 'Корма, амуниция, игрушки и уход';
-      case 'pticzy':
-        return 'Корма, клетки и товары для птиц';
-      case 'reptilii':
-        return 'Террариумы, корм и оборудование';
-      default:
-        return '';
-    }
-  }
-
-  String? _imageForSlug(String slug) {
-    return null;
-  }
 }
 
-class _BigCategoryCell extends StatelessWidget {
-  const _BigCategoryCell({
+class _CategoryRow extends StatelessWidget {
+  const _CategoryRow({
     required this.title,
-    required this.subtitle,
     required this.onTap,
-    this.imageAsset,
+    this.svgPath,
   });
 
   final String title;
-  final String subtitle;
-  final String? imageAsset;
+  final String? svgPath;
   final VoidCallback onTap;
 
   @override
@@ -158,98 +167,47 @@ class _BigCategoryCell extends StatelessWidget {
     final t = Theme.of(context).textTheme;
 
     return InkWell(
-      borderRadius: BorderRadius.circular(22),
       onTap: onTap,
-      child: Container(
-        height: 128,
-        decoration: BoxDecoration(
-          color: cs.surface.withValues(alpha: .92),
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: .14),
-              blurRadius: 18,
-              offset: const Offset(0, 10),
-            ),
-          ],
-          border: Border.all(
-            color: AppColors.deepBlue.withValues(alpha: .10),
-          ),
-        ),
-        clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
         child: Row(
           children: [
-            _LeftImage(imageAsset: imageAsset),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: t.titleMedium,
-                    ),
-                    const SizedBox(height: 6),
-                    Expanded(
-                      child: Text(
-                        subtitle,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: t.bodyMedium?.copyWith(
-                          color: cs.onSurface.withValues(alpha: .75),
-                          height: 1.25,
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppColors.mint,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: svgPath != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: SvgPicture.asset(
+                        svgPath!,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.teal,
+                          BlendMode.srcIn,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          'Открыть',
-                          style: t.labelLarge?.copyWith(color: AppColors.deepBlue)
-                          ),
-                        const SizedBox(width: 6),
-                        Icon(Icons.chevron_right,
-                            color: cs.onSurface.withValues(alpha: .55)),
-                      ],
-                    ),
-                  ],
+                    )
+                  : const Icon(Icons.category_outlined,
+                      color: AppColors.teal, size: 22),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: t.bodyLarge?.copyWith(
+                  color: cs.onSurface,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
+            Icon(Icons.chevron_right,
+                color: cs.onSurface.withValues(alpha: .4), size: 22),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _LeftImage extends StatelessWidget {
-  const _LeftImage({this.imageAsset});
-
-  final String? imageAsset;
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final hasImage = imageAsset != null && imageAsset!.isNotEmpty;
-
-    return SizedBox(
-      width: 120,
-      height: double.infinity,
-      child: hasImage
-          ? Image.asset(imageAsset!, fit: BoxFit.cover)
-          : Container(
-              color: cs.surfaceContainerLowest.withValues(alpha: .65),
-              child: Icon(
-                Icons.image_outlined,
-                size: 42,
-                color: cs.onSurface.withValues(alpha: .25),
-              ),
-            ),
     );
   }
 }

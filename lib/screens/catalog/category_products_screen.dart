@@ -6,7 +6,6 @@ import '../../domain/product.dart';
 import '../../utils/tab_scroll_padding.dart';
 import '../product_details/product_details_screen.dart';
 
-import 'widgets/catalog_load_more_footer.dart';
 import 'widgets/catalog_product_tile.dart';
 import 'widgets/catalog_states.dart';
 
@@ -29,18 +28,17 @@ class CategoryProductsScreen extends StatefulWidget {
 
 class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   bool _loading = true;
-  bool _loadingMore = false;
   String? _error;
 
   List<Product> _items = const [];
 
-  // level3
   List<WooCategory> _filters = const [];
-  int? _activeFilterId; 
+  int? _activeFilterId;
 
   int _page = 1;
   static const int _perPage = 40;
   bool _hasMore = true;
+  bool _loadingMore = false;
 
   @override
   void initState() {
@@ -73,9 +71,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     }
   }
 
-  int get _categoryIdForRequest {
-    return _activeFilterId ?? widget.category.id;
-  }
+  int get _categoryIdForRequest => _activeFilterId ?? widget.category.id;
 
   Future<void> _load({bool reset = false}) async {
     if (reset) {
@@ -131,12 +127,14 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
         children: [
           if (_filters.isNotEmpty) _buildChips(context),
 
-          if (_loading) const CatalogLoadingView(),
+          if (_loading) const Expanded(child: CatalogLoadingView()),
 
           if (!_loading && _error != null)
-            CatalogErrorView(
-              error: _error!,
-              onRetry: () => _load(reset: true),
+            Expanded(
+              child: CatalogErrorView(
+                error: _error!,
+                onRetry: () => _load(reset: true),
+              ),
             ),
 
           if (!_loading && _error == null)
@@ -146,12 +144,23 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                 bottom: false,
                 child: RefreshIndicator(
                   onRefresh: () => _load(reset: true),
-                  child: ListView.separated(
-                    padding: tabScrollPadding(context),
+                  child: GridView.builder(
+                    padding: tabScrollPadding(context).copyWith(
+                      left: 12,
+                      right: 12,
+                      top: 12,
+                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 0.68,
+                    ),
+                    itemCount: products.length + (_hasMore ? 1 : 0),
                     itemBuilder: (_, i) {
                       if (i == products.length) {
-                        return CatalogLoadMoreFooter(
-                          visible: _hasMore,
+                        return _LoadMoreCell(
                           loading: _loadingMore,
                           onTap: () => _load(),
                         );
@@ -163,16 +172,13 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                         onOpenDetails: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => ProductDetailsScreen(product: item),
+                              builder: (_) =>
+                                  ProductDetailsScreen(product: item),
                             ),
                           );
                         },
                       );
                     },
-                    separatorBuilder: (_, i) => i < products.length - 1
-                        ? const SizedBox(height: 12)
-                        : const SizedBox.shrink(),
-                    itemCount: products.length + 1,
                   ),
                 ),
               ),
@@ -184,7 +190,6 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
 
   Widget _buildChips(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final cs = Theme.of(context).colorScheme;
 
     Widget chip({
       required bool selected,
@@ -208,13 +213,16 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
             ],
           ),
           labelStyle: textTheme.labelLarge?.copyWith(
-            color: selected ? Colors.white : cs.onSurface,
+            color: selected ? Colors.white : const Color(0xFF007FAF),
           ),
-          selectedColor: const Color(0xFF007FAF), 
-          backgroundColor: cs.surface.withValues(alpha: .95),
-          side: BorderSide(color: selected ? const Color(0xFF007FAF) : Colors.transparent),
+          selectedColor: const Color(0xFF007FAF),
+          backgroundColor: Colors.white,
+          side: BorderSide(
+            color: selected ? const Color(0xFF007FAF) : const Color(0xFF007FAF),
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18)),
         ),
       );
     }
@@ -245,6 +253,25 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
             ),
         ],
       ),
+    );
+  }
+}
+
+class _LoadMoreCell extends StatelessWidget {
+  const _LoadMoreCell({required this.loading, required this.onTap});
+
+  final bool loading;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: loading
+          ? const CircularProgressIndicator()
+          : TextButton(
+              onPressed: onTap,
+              child: const Text('Загрузить ещё'),
+            ),
     );
   }
 }

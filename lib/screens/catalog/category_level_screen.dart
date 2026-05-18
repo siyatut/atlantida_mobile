@@ -39,14 +39,13 @@ class CategoryLevelScreen extends StatelessWidget {
             top: false,
             bottom: false,
             child: ListView.separated(
-              padding: tabScrollPadding(context),
+              padding: tabScrollPadding(context).copyWith(top: 8),
               itemCount: level2.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (_, i) {
                 final c = level2[i];
-                return _BigSubcategoryCell(
+                return _SubcategoryRow(
                   title: c.name,
-                  imageAsset: null, // потом подключим фото
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -65,91 +64,34 @@ class CategoryLevelScreen extends StatelessWidget {
   }
 }
 
-class _BigSubcategoryCell extends StatelessWidget {
-  const _BigSubcategoryCell({
-    required this.title,
-    required this.onTap,
-    this.imageAsset,
-  });
+class _SubcategoryRow extends StatelessWidget {
+  const _SubcategoryRow({required this.title, required this.onTap});
 
   final String title;
-  final String? imageAsset;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final t = Theme.of(context).textTheme;
-    final hasImage = imageAsset != null && imageAsset!.isNotEmpty;
 
     return InkWell(
-      borderRadius: BorderRadius.circular(22),
       onTap: onTap,
-      child: Container(
-        height: 118,
-        decoration: BoxDecoration(
-          color: cs.surface.withValues(alpha: .92),
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: .14),
-              blurRadius: 18,
-              offset: const Offset(0, 10),
-            ),
-          ],
-          border: Border.all(
-            color: AppColors.deepBlue.withValues(alpha: .10),
-          ),
-        ),
-        clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Row(
           children: [
-            SizedBox(
-              width: 110,
-              height: double.infinity,
-              child: hasImage
-                  ? Image.asset(imageAsset!, fit: BoxFit.cover)
-                  : Container(
-                      color: cs.surfaceContainerLowest.withValues(alpha: .65),
-                      child: Icon(
-                        Icons.image_outlined,
-                        size: 40,
-                        color: cs.onSurface.withValues(alpha: .25),
-                      ),
-                    ),
-            ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: t.titleMedium,
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        Text(
-                          'Открыть',
-                          style: t.labelLarge?.copyWith(
-                            color: AppColors.deepBlue,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Icon(
-                          Icons.chevron_right,
-                          color: cs.onSurface.withValues(alpha: .55),
-                        ),
-                      ],
-                    ),
-                  ],
+              child: Text(
+                title,
+                style: t.bodyLarge?.copyWith(
+                  color: cs.onSurface,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
+            Icon(Icons.chevron_right,
+                color: AppColors.softInk.withValues(alpha: .6), size: 22),
           ],
         ),
       ),
