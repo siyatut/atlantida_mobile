@@ -402,15 +402,14 @@ class _AdvantageRow extends StatelessWidget {
               children: [
                 Text(
                   advantage.title,
-                  style: t.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+                  style: t.titleSmall?.copyWith(
                     color: cs.onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   advantage.text,
-                  style: t.bodySmall?.copyWith(
+                  style: t.bodyMedium?.copyWith(
                     color: AppColors.softInk,
                     height: 1.35,
                   ),
