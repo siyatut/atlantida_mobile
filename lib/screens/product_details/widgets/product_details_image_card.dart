@@ -16,6 +16,7 @@ class ProductDetailsImageCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: isDark ? _cardBg(context) : AppColors.white,
         borderRadius: BorderRadius.circular(24),
@@ -27,8 +28,10 @@ class ProductDetailsImageCard extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(16),
-      child: ProductImageBox(imageUrl: imageUrl),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ProductImageBox(imageUrl: imageUrl, borderRadius: 0),
+      ),
     );
   }
 }

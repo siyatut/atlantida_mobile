@@ -45,7 +45,10 @@ class CatalogProductTile extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                   child: AspectRatio(
                     aspectRatio: 1,
-                    child: ProductImageBox(imageUrl: product.image, borderRadius: 0),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: ProductImageBox(imageUrl: product.image, borderRadius: 0),
+                    ),
                   ),
                 ),
                 Positioned(
