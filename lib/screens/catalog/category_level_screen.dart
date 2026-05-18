@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../data/strapi/strapi_repository.dart';
 import '../../data/woo/woo_dto.dart';
-import '../../data/woo/woo_repository.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/tab_scroll_padding.dart';
 
@@ -14,7 +14,7 @@ class CategoryLevelScreen extends StatelessWidget {
     required this.parent,
   });
 
-  final WooRepository repo;
+  final StrapiRepository repo;
   final WooCategory parent;
 
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../data/strapi/strapi_repository.dart';
 import '../../data/woo/category_tree.dart';
 import '../../data/woo/woo_dto.dart';
-import '../../data/woo/woo_repository.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/tab_scroll_padding.dart';
 
@@ -16,7 +16,7 @@ class CatalogHomeScreen extends StatefulWidget {
 }
 
 class _CatalogHomeScreenState extends State<CatalogHomeScreen> {
-  final _repo = WooRepository();
+  final _repo = StrapiRepository();
 
   bool _loading = true;
   String? _error;

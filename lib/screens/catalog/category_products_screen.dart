@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../data/strapi/strapi_repository.dart';
 import '../../data/woo/woo_dto.dart';
-import '../../data/woo/woo_repository.dart';
 import '../../domain/product.dart';
 import '../../utils/tab_scroll_padding.dart';
 import '../product_details/product_details_screen.dart';
@@ -20,7 +20,7 @@ class CategoryProductsScreen extends StatefulWidget {
     required this.category,
   });
 
-  final WooRepository repo;
+  final StrapiRepository repo;
   final WooCategory category;
 
   @override
