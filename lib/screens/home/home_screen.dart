@@ -137,31 +137,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 12)),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(
-                  height: 104,
-                  child: ListView.separated(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _categories.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 12),
-                    itemBuilder: (_, i) {
-                      final c = _categories[i];
-                      return _CategoryChip(
-                        label: c.name,
-                        svgPath: _svgForSlug[c.slug.toLowerCase()],
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => CategoryLevelScreen(
-                              repo: _repo,
-                              parent: c,
-                            ),
+              child: SizedBox(
+                height: 104,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _categories.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  itemBuilder: (_, i) {
+                    final c = _categories[i];
+                    return _CategoryChip(
+                      label: c.name,
+                      svgPath: _svgForSlug[c.slug.toLowerCase()],
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => CategoryLevelScreen(
+                            repo: _repo,
+                            parent: c,
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -309,6 +306,9 @@ class _CategoryChip extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.mint,
               borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppColors.teal.withValues(alpha: .3),
+              ),
             ),
             child: svgPath != null
                 ? Padding(
