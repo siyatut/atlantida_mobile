@@ -39,6 +39,11 @@ class HomeContent {
       title: 'Большой ассортимент',
       text: 'Аквариумы, фильтры, корма, игрушки и многое другое.',
     ),
+    HomeAdvantage(
+      icon: Icons.support_agent_outlined,
+      title: 'Консультации профессионалов',
+      text: 'Поможем с выбором и уходом за питомцами.',
+    ),
   ];
 
   static const whyTitle = 'Почему выбирают «Атлантиду»';
