@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
 
 import '../../context/favorites_provider.dart';
-import '../../theme/app_colors.dart';
 import '../../utils/tab_scroll_padding.dart';
+import '../../widgets/page_header.dart';
 import '../catalog/widgets/catalog_product_tile.dart';
 import '../product_details/product_details_screen.dart';
 
 class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({super.key});
+  const FavoritesScreen({super.key, this.onGoHome});
+
+  final VoidCallback? onGoHome;
 
   @override
   Widget build(BuildContext context) {
     final favorites = FavoritesProvider.of(context);
     final items = favorites.items;
+    final count = items.length;
 
     return SafeArea(
       bottom: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-            child: Text(
-              'Избранное',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: AppColors.deepBlue,
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
+          PageHeader(
+            title: 'Избранное',
+            subtitle: count == 0 ? null : '$count ${_itemsLabel(count)}',
+            onBack: onGoHome,
           ),
           const SizedBox(height: 12),
           Expanded(
@@ -51,14 +49,12 @@ class FavoritesScreen extends StatelessWidget {
                       final product = items[i];
                       return CatalogProductTile(
                         product: product,
-                        onOpenDetails: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ProductDetailsScreen(product: product),
-                            ),
-                          );
-                        },
+                        onOpenDetails: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                ProductDetailsScreen(product: product),
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -66,6 +62,20 @@ class FavoritesScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  static String _itemsLabel(int n) {
+    if (n % 100 >= 11 && n % 100 <= 19) return 'товаров';
+    switch (n % 10) {
+      case 1:
+        return 'товар';
+      case 2:
+      case 3:
+      case 4:
+        return 'товара';
+      default:
+        return 'товаров';
+    }
   }
 }
 
@@ -79,7 +89,8 @@ class _EmptyFavorites extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.favorite_border, size: 64, color: cs.onSurface.withValues(alpha: .25)),
+          Icon(Icons.favorite_border,
+              size: 64, color: cs.onSurface.withValues(alpha: .25)),
           const SizedBox(height: 16),
           Text(
             'Вы ещё не добавили\nтовары в избранное',
