@@ -16,18 +16,5 @@ class AppColors {
   static const ink = Color(0xFF1F2933);         // тёмный текст
   static const softInk = Color(0xFF586174);     // вторичный текст
 
-  // универсальный градиент (слева-сверху → вправо-вниз)
-  static const gradientAqua = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [lightBlue, aqua, teal, deepBlue],
-    stops: [0.15, 0.45, 0.72, 0.95],
-  );
 
-  static const gradientOcean = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [deepBlue, teal, aqua],
-    stops: [0.05, 0.6, 1.0],
-  );
 }

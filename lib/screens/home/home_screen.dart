@@ -213,7 +213,12 @@ class _PromoBanner extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: AppColors.gradientOcean,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.deepBlue, AppColors.teal, AppColors.aqua],
+          stops: [0.05, 0.6, 1.0],
+        ),
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
