@@ -322,6 +322,10 @@ class _CategoryChip extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.mint,
               borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppColors.teal.withValues(alpha: .3),
+                width: 1.5,
+              ),
             ),
             child: svgPath != null
                 ? Padding(
