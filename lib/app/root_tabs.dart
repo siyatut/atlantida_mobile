@@ -26,9 +26,12 @@ class _RootTabsState extends State<RootTabs> {
         onOpenCatalog: () => setState(() => _index = 1),
         onOpenFavorites: () => setState(() => _index = 2),
       ),
-      const CatalogHomeScreen(),
-      const FavoritesScreen(),
-      AboutScreen(onOpenCatalog: () => setState(() => _index = 1)),
+      CatalogHomeScreen(onGoHome: () => setState(() => _index = 0)),
+      FavoritesScreen(onGoHome: () => setState(() => _index = 0)),
+      AboutScreen(
+        onOpenCatalog: () => setState(() => _index = 1),
+        onGoHome: () => setState(() => _index = 0),
+      ),
     ];
   }
 
