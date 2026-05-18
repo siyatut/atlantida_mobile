@@ -76,5 +76,23 @@ class AppTypography {
           letterSpacing: 0.1,
           color: cs.onSurface.withValues(alpha: .72),
         ),
+
+        labelSmall: TextStyle(
+          fontFamily: _baseFamily,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          height: 1.15,
+          letterSpacing: 0.1,
+          color: cs.onSurface.withValues(alpha: .55),
+        ),
+
+        bodySmall: TextStyle(
+          fontFamily: _baseFamily,
+          fontSize: 13,
+          fontWeight: FontWeight.w400,
+          height: 1.35,
+          letterSpacing: 0.0,
+          color: cs.onSurface.withValues(alpha: .72),
+        ),
       );
 }
