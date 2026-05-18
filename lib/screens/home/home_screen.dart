@@ -266,7 +266,7 @@ class _PromoBanner extends StatelessWidget {
               children: [
                 Text(
                   'При заказе от 10 000 ₽',
-                  style: t.bodySmall?.copyWith(
+                  style: t.bodyMedium?.copyWith(
                     color: Colors.white.withValues(alpha: .8),
                   ),
                 ),
