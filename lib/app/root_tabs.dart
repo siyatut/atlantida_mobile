@@ -67,6 +67,7 @@ class _RootTabsState extends State<RootTabs> {
             child: NavigationBar(
               selectedIndex: _index,
               onDestinationSelected: (i) => setState(() => _index = i),
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
               destinations: const [
                 NavigationDestination(
                   icon: Icon(Icons.home_outlined),
