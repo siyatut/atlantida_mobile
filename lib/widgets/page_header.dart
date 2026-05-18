@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../utils/text_utils.dart';
 
 class PageHeader extends StatelessWidget {
   const PageHeader({
@@ -38,7 +39,7 @@ class PageHeader extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  title,
+                  fixPrepositions(title),
                   style: t.headlineSmall?.copyWith(
                     color: AppColors.deepBlue,
                     fontWeight: FontWeight.w700,

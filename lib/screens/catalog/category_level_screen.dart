@@ -8,7 +8,7 @@ import '../../widgets/page_header.dart';
 
 import 'category_products_screen.dart';
 
-class CategoryLevelScreen extends StatelessWidget {
+class CategoryLevelScreen extends StatefulWidget {
   const CategoryLevelScreen({
     super.key,
     required this.repo,
@@ -19,6 +19,41 @@ class CategoryLevelScreen extends StatelessWidget {
   final WooCategory parent;
 
   @override
+  State<CategoryLevelScreen> createState() => _CategoryLevelScreenState();
+}
+
+class _CategoryLevelScreenState extends State<CategoryLevelScreen> {
+  List<WooCategory> _children = const [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final tree = await widget.repo.categoryTree();
+    if (!mounted) return;
+    final children = tree.childrenOf(widget.parent.id);
+    if (children.isEmpty) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => CategoryProductsScreen(
+            repo: widget.repo,
+            category: widget.parent,
+          ),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      _children = children;
+      _loading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -27,51 +62,36 @@ class CategoryLevelScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PageHeader(
-              title: parent.name,
+              title: widget.parent.name,
               subtitle: 'Выберите подкатегорию',
               onBack: () => Navigator.of(context).pop(),
             ),
             const SizedBox(height: 12),
-            Expanded(
-              child: FutureBuilder(
-                future: repo.categoryTree(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  final tree = snapshot.data!;
-                  final level2 = tree.childrenOf(parent.id);
-
-                  if (level2.isEmpty) {
-                    return CategoryProductsScreen(
-                        repo: repo, category: parent);
-                  }
-
-                  return ListView.separated(
-                    padding: tabScrollPadding(context)
-                        .copyWith(left: 16, right: 16, top: 4),
-                    itemCount: level2.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (_, i) {
-                      final c = level2[i];
-                      return _SubcategoryCard(
-                        title: c.name,
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => CategoryProductsScreen(
-                              repo: repo,
-                              category: c,
-                              parentName: parent.name,
-                            ),
+            if (_loading)
+              const Expanded(child: Center(child: CircularProgressIndicator()))
+            else
+              Expanded(
+                child: ListView.separated(
+                  padding: tabScrollPadding(context)
+                      .copyWith(left: 16, right: 16, top: 4),
+                  itemCount: _children.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  itemBuilder: (_, i) {
+                    final c = _children[i];
+                    return _SubcategoryCard(
+                      title: c.name,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => CategoryLevelScreen(
+                            repo: widget.repo,
+                            parent: c,
                           ),
                         ),
-                      );
-                    },
-                  );
-                },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),
