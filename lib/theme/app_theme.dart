@@ -38,13 +38,16 @@ class AppTheme {
         elevation: 0,
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-        indicatorColor: AppColors.aqua,
+        indicatorColor: AppColors.teal,
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
             size: 26,
             color: states.contains(WidgetState.selected)
                 ? AppColors.white
-                : AppColors.lightBlue,
+                : AppColors.teal,
           ),
         ),
         labelTextStyle: WidgetStateProperty.resolveWith(
@@ -54,7 +57,7 @@ class AppTheme {
                 : FontWeight.w600,
             color: states.contains(WidgetState.selected)
                 ? AppColors.white
-                : AppColors.lightBlue,
+                : AppColors.teal,
           ),
         ),
       ),

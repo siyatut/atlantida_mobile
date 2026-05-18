@@ -1,10 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 
+import '../theme/app_colors.dart';
+
 import '../screens/about/about_screen.dart';
 import '../screens/catalog/catalog_home_screen.dart';
 import '../screens/favorites/favorites_screen.dart';
 import '../screens/home/home_screen.dart';
+
+class _NavItem {
+  const _NavItem({required this.icon, required this.activeIcon});
+  final IconData icon;
+  final IconData activeIcon;
+}
+
+const _navItems = [
+  _NavItem(icon: Icons.home_outlined,       activeIcon: Icons.home),
+  _NavItem(icon: Icons.storefront_outlined, activeIcon: Icons.storefront),
+  _NavItem(icon: Icons.favorite_outline,    activeIcon: Icons.favorite),
+  _NavItem(icon: Icons.info_outline,        activeIcon: Icons.info),
+];
+
+class _BottomNav extends StatelessWidget {
+  const _BottomNav({required this.selectedIndex, required this.onTap});
+
+  final int selectedIndex;
+  final ValueChanged<int> onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      child: Row(
+        children: [
+          for (int i = 0; i < _navItems.length; i++)
+            Expanded(
+              child: GestureDetector(
+                onTap: () => onTap(i),
+                behavior: HitTestBehavior.opaque,
+                child: Center(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: i == selectedIndex
+                          ? AppColors.teal
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      i == selectedIndex
+                          ? _navItems[i].activeIcon
+                          : _navItems[i].icon,
+                      size: 24,
+                      color: i == selectedIndex
+                          ? Colors.white
+                          : AppColors.teal,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
 
 class RootTabs extends StatefulWidget {
   const RootTabs({super.key});
@@ -64,32 +127,9 @@ class _RootTabsState extends State<RootTabs> {
           ),
           bottomNavigationBar: SafeArea(
             top: false,
-            child: NavigationBar(
+            child: _BottomNav(
               selectedIndex: _index,
-              onDestinationSelected: (i) => setState(() => _index = i),
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home),
-                  label: 'Главная',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.storefront_outlined),
-                  selectedIcon: Icon(Icons.storefront),
-                  label: 'Каталог',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.favorite_outline),
-                  selectedIcon: Icon(Icons.favorite),
-                  label: 'Избранное',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.info_outline),
-                  selectedIcon: Icon(Icons.info),
-                  label: 'О нас',
-                ),
-              ],
+              onTap: (i) => setState(() => _index = i),
             ),
           ),
         ),
