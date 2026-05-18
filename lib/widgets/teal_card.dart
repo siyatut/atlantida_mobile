@@ -49,8 +49,9 @@ class TealCtaCard extends StatelessWidget {
         children: [
           Text(
             subtitle,
-            style: t.bodySmall?.copyWith(
-              color: Colors.white.withValues(alpha: .85),
+            style: t.bodyMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 14),
