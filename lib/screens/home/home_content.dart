@@ -37,7 +37,7 @@ class HomeContent {
     HomeAdvantage(
       icon: Icons.inventory_2_outlined,
       title: 'Большой ассортимент',
-      text: 'Аквариумы, оборудование, живые растения и рыбки',
+      text: 'Аквариумы, оборудование, живые растения, рыбки и многое другое.',
     ),
     HomeAdvantage(
       icon: Icons.support_agent_outlined,
