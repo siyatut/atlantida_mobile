@@ -274,17 +274,29 @@ class _LoadMoreCell extends StatelessWidget {
     return Center(
       child: loading
           ? const CircularProgressIndicator(strokeWidth: 2)
-          : OutlinedButton.icon(
-              onPressed: onTap,
-              icon: const Icon(Icons.expand_more, size: 18),
-              label: const Text('Загрузить ещё'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.teal,
-                side: const BorderSide(color: AppColors.teal, width: 1.5),
-                shape: RoundedRectangleBorder(
+          : GestureDetector(
+              onTap: onTap,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.teal, width: 1.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.expand_more,
+                        size: 18, color: AppColors.teal),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Загрузить ещё',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: AppColors.teal,
+                          ),
+                    ),
+                  ],
+                ),
               ),
             ),
     );
