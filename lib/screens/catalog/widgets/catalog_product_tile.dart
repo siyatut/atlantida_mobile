@@ -46,14 +46,14 @@ class CatalogProductTile extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.all(12),
                       child: ProductImageBox(imageUrl: product.image, borderRadius: 0),
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 6,
-                  right: 6,
+                  top: 4,
+                  right: 4,
                   child: _FavButton(
                     isFavorite: isFav,
                     onTap: () => favorites.toggle(product),
