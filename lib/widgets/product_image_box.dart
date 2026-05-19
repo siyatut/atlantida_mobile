@@ -23,7 +23,6 @@ class ProductImageBox extends StatelessWidget {
     final cs = theme.colorScheme;
 
     final bg = backgroundColor ?? cs.surface;
-    final iconColor = cs.onSurface.withValues(alpha: .25);
 
     return AspectRatio(
       aspectRatio: 1,
@@ -40,11 +39,23 @@ class ProductImageBox extends StatelessWidget {
                 placeholder: (_, __) => _Loader(
                   color: theme.progressIndicatorTheme.color,
                 ),
-                errorWidget: (_, __, ___) =>
-                    Icon(Icons.broken_image_outlined, color: iconColor),
+                errorWidget: (_, __, ___) => _Placeholder(fit: fit),
               )
-            : Icon(Icons.image_outlined, size: 48, color: iconColor),
+            : _Placeholder(fit: fit),
       ),
+    );
+  }
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder({required this.fit});
+  final BoxFit fit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/images/placeholder-product.png',
+      fit: fit,
     );
   }
 }
