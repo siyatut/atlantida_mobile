@@ -94,6 +94,13 @@ class ProductDetailsScreen extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Наличие уточняйте в магазине',
+                            style: t.bodyMedium?.copyWith(
+                              color: AppColors.softInk,
+                            ),
+                          ),
                         ],
                         const SizedBox(height: 20),
                         ProductDetailsDescriptionCard(text: description),
