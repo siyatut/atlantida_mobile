@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../data/strapi/strapi_repository.dart';
+import '../../theme/app_colors.dart';
 import '../../data/woo/woo_dto.dart';
 import '../../domain/product.dart';
-import '../../utils/tab_scroll_padding.dart';
 import '../../widgets/page_header.dart';
 import '../product_details/product_details_screen.dart';
 
@@ -144,35 +144,51 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () => _load(reset: true),
-                  child: GridView.builder(
-                    padding: tabScrollPadding(context)
-                        .copyWith(left: 12, right: 12, top: 12),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 0.68,
-                    ),
-                    itemCount: products.length + (_hasMore ? 1 : 0),
-                    itemBuilder: (_, i) {
-                      if (i == products.length) {
-                        return _LoadMoreCell(
-                          loading: _loadingMore,
-                          onTap: () => _load(),
-                        );
-                      }
-                      final item = products[i];
-                      return CatalogProductTile(
-                        product: item,
-                        onOpenDetails: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                ProductDetailsScreen(product: item),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                        sliver: SliverGrid(
+                          delegate: SliverChildBuilderDelegate(
+                            (_, i) {
+                              final item = products[i];
+                              return CatalogProductTile(
+                                product: item,
+                                onOpenDetails: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        ProductDetailsScreen(product: item),
+                                  ),
+                                ),
+                              );
+                            },
+                            childCount: products.length,
+                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 0.68,
                           ),
                         ),
-                      );
-                    },
+                      ),
+                      if (_hasMore)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: _LoadMoreCell(
+                              loading: _loadingMore,
+                              onTap: () => _load(),
+                            ),
+                          ),
+                        ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).padding.bottom + 16,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -257,8 +273,20 @@ class _LoadMoreCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: loading
-          ? const CircularProgressIndicator()
-          : TextButton(onPressed: onTap, child: const Text('Загрузить ещё')),
+          ? const CircularProgressIndicator(strokeWidth: 2)
+          : OutlinedButton.icon(
+              onPressed: onTap,
+              icon: const Icon(Icons.expand_more, size: 18),
+              label: const Text('Загрузить ещё'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.teal,
+                side: const BorderSide(color: AppColors.teal, width: 1.5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+            ),
     );
   }
 }
