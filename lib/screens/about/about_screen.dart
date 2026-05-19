@@ -162,7 +162,7 @@ class AboutScreen extends StatelessWidget {
 
                 SliverToBoxAdapter(
                   child: SizedBox(
-                      height: tabScrollPadding(context).bottom + 16),
+                      height: tabScrollPadding(context).bottom),
                 ),
               ],
             ),
