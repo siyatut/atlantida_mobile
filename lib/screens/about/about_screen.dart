@@ -122,7 +122,7 @@ class AboutScreen extends StatelessWidget {
                 const SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.only(left: 20, bottom: 12),
-                    child: AboutSectionTitle('Построить маршрут до магазина'),
+                    child: AboutSectionTitle('Нужен маршрут до магазина?'),
                   ),
                 ),
                 SliverToBoxAdapter(

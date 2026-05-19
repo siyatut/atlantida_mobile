@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../../../theme/app_colors.dart';
+
 class ContactsSectionTitle extends StatelessWidget {
   const ContactsSectionTitle(this.text, {super.key});
   final String text;
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return Text(
       text,
-      style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: AppColors.deepBlue,
+            fontWeight: FontWeight.w700,
+          ),
     );
   }
 }
