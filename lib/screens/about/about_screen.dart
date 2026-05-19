@@ -38,6 +38,8 @@ class AboutScreen extends StatelessWidget {
           Expanded(
             child: CustomScrollView(
               slivers: [
+                const SliverToBoxAdapter(child: SizedBox(height: 16)),
+
                 // 1) О магазине
                 SliverToBoxAdapter(
                     child: _buildTextSection(context, aboutIntro)),
