@@ -84,8 +84,7 @@ class ProductDetailsScreen extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        if (product.price != null &&
-                            product.price!.isNotEmpty) ...[
+                        if ((double.tryParse(product.price ?? '') ?? 0) > 0) ...[
                           const SizedBox(height: 6),
                           Text(
                             '${product.price} ₽',
@@ -97,6 +96,14 @@ class ProductDetailsScreen extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             'Наличие уточняйте в магазине',
+                            style: t.bodyMedium?.copyWith(
+                              color: AppColors.softInk,
+                            ),
+                          ),
+                        ] else ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            'Наличие и цену уточняйте в магазине',
                             style: t.bodyMedium?.copyWith(
                               color: AppColors.softInk,
                             ),

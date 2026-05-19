@@ -124,13 +124,15 @@ class _PriceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final base = Theme.of(context).textTheme.bodyMedium;
-    final hasPrice = price != null && price!.isNotEmpty;
+    final hasPrice = (double.tryParse(price ?? '') ?? 0) > 0;
+
+    if (!hasPrice) return const SizedBox.shrink();
 
     return Text(
-      hasPrice ? '$price ₽' : 'Цена по запросу',
+      '$price ₽',
       style: base?.copyWith(
         fontWeight: FontWeight.w700,
-        color: hasPrice ? AppColors.aqua : AppColors.softInk,
+        color: AppColors.aqua,
       ),
     );
   }
