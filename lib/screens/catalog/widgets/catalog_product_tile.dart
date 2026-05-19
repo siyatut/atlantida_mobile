@@ -101,16 +101,16 @@ class _FavButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 32,
-        height: 32,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: .85),
           shape: BoxShape.circle,
         ),
         child: Icon(
           isFavorite ? Icons.favorite : Icons.favorite_outline,
-          size: 18,
-          color: isFavorite ? Colors.red : AppColors.softInk,
+          size: 22,
+          color: isFavorite ? AppColors.teal : AppColors.softInk,
         ),
       ),
     );
