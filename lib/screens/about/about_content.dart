@@ -12,19 +12,35 @@ class AboutContent {
       );
 
   static const intro = AboutSection(
-    'Широкий ассортимент товаров для вашего питомца',
+    'О магазине',
     [
-      'Зоомагазин «Атлантида» в Нижнем Новгороде — ваш лучший выбор для заботы о питомце.',
-      'Более 11 лет подбираем корма, оборудование и аксессуары для животных разных видов: от рыбок и птиц до собак и кошек.',
-      'Нам важно, чтобы вашему любимцу было комфортно и безопасно, поэтому мы сотрудничаем только с проверенными годами производителями.',
+      'Зоомагазин «Атлантида» — это профессиональная аквариумистика и широкий ассортимент товаров для домашних питомцев.',
+      'Мы работаем с 2015 года и за это время помогли тысячам владельцев создать идеальные условия для своих любимцев.', 
+      'Наша команда профессионалов всегда готова проконсультировать вас по любым вопросам.',
     ],
   );
 
-  static const whyUsBullets = <String>[
-    'Широкий ассортимент товаров для разных видов питомцев',
-    'Качественные товары от известных производителей',
-    'Консультации профессионалов по выбору товаров и уходу',
-    'Честные и доступные цены',
+  static const benefits = <AboutBenefitData>[
+    AboutBenefitData(
+      icon: Icons.verified_outlined,
+      title: 'Гарантия качества',
+      subtitle: 'Все товары сертифицированы и проходят строгий контроль',
+    ),
+    AboutBenefitData(
+      icon: Icons.local_shipping_outlined,
+      title: 'Бесплатная доставка',
+      subtitle: 'При заказе аквариума от 10\u00A0000\u00A0₽ доставим до дома бесплатно',
+    ),
+    AboutBenefitData(
+      icon: Icons.people_outline,
+      title: 'Консультации экспертов',
+      subtitle: 'Бесплатные консультации по выбору и уходу за питомцами',
+    ),
+    AboutBenefitData(
+      icon: Icons.shopping_bag_outlined,
+      title: 'Широкий ассортимент',
+      subtitle: 'Аквариумы, оборудование, живые растения, рыбки и многое другое',
+    ),
   ];
 
   static const features = <AboutFeatureData>[
@@ -82,4 +98,15 @@ class AboutAccordionItemData {
   final String title;
   final String text;
   const AboutAccordionItemData({required this.title, required this.text});
+}
+
+class AboutBenefitData {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  const AboutBenefitData({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
 }

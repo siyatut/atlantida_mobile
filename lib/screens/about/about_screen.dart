@@ -9,11 +9,9 @@ import '../../utils/text_utils.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/teal_card.dart';
 import '../contacts/contacts_content.dart';
+import '../home/home_content.dart';
 
 import 'about_content.dart';
-import 'widgets/about_accordion_item.dart';
-import 'widgets/about_bullets.dart';
-import 'widgets/about_feature_grid.dart';
 import 'widgets/about_section_title.dart';
 import 'widgets/about_surface_card.dart';
 
@@ -25,9 +23,6 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     final aboutIntro = AboutContent.intro;
 
     return SafeArea(
@@ -46,72 +41,44 @@ class AboutScreen extends StatelessWidget {
                 // 1) О магазине
                 SliverToBoxAdapter(
                     child: _buildTextSection(context, aboutIntro)),
-                const SliverToBoxAdapter(child: gap12),
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-                // 2) Преимущества магазина
+                // 2) Почему выбирают
                 SliverToBoxAdapter(
-                  child: AboutSurfaceCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const AboutSectionTitle(
-                            'Почему выбирают «Атлантиду»'),
-                        gap12,
-                        const AboutBullets(items: AboutContent.whyUsBullets),
-                        gap12,
-                        Text(
-                          fixPrepositions(
-                            'Мы стремимся сделать заботу о питомце проще: '
-                            'помогаем с выбором, советуем правильный уход и предлагаем необходимые товары.',
-                          ),
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: cs.onSurface.withValues(alpha: .85),
-                            height: 1.35,
-                          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 20, bottom: 12),
+                        child: AboutSectionTitle('Почему выбирают Атлантиду'),
+                      ),
+                      AboutSurfaceCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final adv in HomeContent.advantages)
+                              _BenefitRow(advantage: adv),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                const SliverToBoxAdapter(child: gap12),
-
-                // 3) Фишки/иконки
-                const SliverToBoxAdapter(
-                  child: AboutSurfaceCard(
-                    child: AboutFeatureGrid(items: AboutContent.features),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: gap12),
-
-                // 4) Категории (аккордеон)
-                SliverToBoxAdapter(
-                  child: AboutSurfaceCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const AboutSectionTitle(
-                            'Зоотовары для разных питомцев'),
-                        gap8,
-                        for (final item in AboutContent.accordion) ...[
-                          AboutAccordionItem(
-                            title: fixPrepositions(item.title),
-                            text: fixPrepositions(item.text),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: gap12),
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
                 // 5) Контакты
                 SliverToBoxAdapter(
-                  child: AboutSurfaceCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const AboutSectionTitle('Контакты'),
-                        gap12,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 20, bottom: 12),
+                        child: AboutSectionTitle('Контакты и адрес магазина'),
+                      ),
+                      AboutSurfaceCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                         _ContactRow(
                           icon: Icons.call_outlined,
                           label: 'Телефон',
@@ -138,20 +105,29 @@ class AboutScreen extends StatelessWidget {
                         _ContactRow(
                           icon: Icons.location_on_outlined,
                           label: 'Адрес',
-                          value: ContactsContent.addressTitleUi(),
+                          value: ContactsContent.addressFullUi(),
                           onTap: null,
                         ),
-                      ],
-                    ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SliverToBoxAdapter(child: gap12),
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
                 // 6) Маршрут
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20, bottom: 12),
+                    child: AboutSectionTitle('Построить маршрут до магазина'),
+                  ),
+                ),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: TealRouteCard(
+                      subtitle: 'Воспользуйтесь удобным способом',
                       onYandex: () =>
                           openUrl(ContactsContent.yandexRouteUrl),
                       onGoogle: () =>
@@ -180,8 +156,6 @@ class AboutScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AboutSectionTitle(splitTitleInTwo(fixPrepositions(s.title))),
-          gap8,
           for (final p in s.paragraphs) ...[
             Text(
               fixPrepositions(p),
@@ -243,11 +217,10 @@ class _ContactRow extends StatelessWidget {
                   ),
                   Text(
                     value,
-                    style: t.bodyMedium?.copyWith(
+                    style: t.titleSmall?.copyWith(
                       color: onTap != null
                           ? AppColors.teal
                           : AppColors.deepBlue,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -258,6 +231,56 @@ class _ContactRow extends StatelessWidget {
                   color: AppColors.softInk.withValues(alpha: .5), size: 18),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _BenefitRow extends StatelessWidget {
+  const _BenefitRow({required this.advantage});
+
+  final HomeAdvantage advantage;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    final cs = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.teal,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(advantage.icon, color: Colors.white, size: 20),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  fixPrepositions(advantage.title),
+                  style: t.titleSmall?.copyWith(color: cs.onSurface),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  fixPrepositions(advantage.text),
+                  style: t.bodyMedium?.copyWith(
+                    color: AppColors.softInk,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../../../theme/app_colors.dart';
+
 class AboutSectionTitle extends StatelessWidget {
   const AboutSectionTitle(this.text, {super.key});
   final String text;
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: Theme.of(context).textTheme.titleMedium);
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: AppColors.deepBlue,
+            fontWeight: FontWeight.w700,
+          ),
+    );
   }
 }

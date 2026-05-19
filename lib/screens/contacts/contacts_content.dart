@@ -21,12 +21,15 @@ class ContactsContent {
 
   static const telegramUrl = 'https://t.me/gagin645';
 
-  static const addressTitle = 'Нижний Новгород, Коминтерна, 117';
+  static const addressTitle = 'Нижний Новгород, ул. Коминтерна, 117';
   static const addressSubtitle =
       'Универмаг «Сормовские Зори», 1 этаж, левое крыло — за аптекой.';
+  static const addressFull =
+      'Нижний Новгород, ул. Коминтерна, 117, Универмаг «Сормовские Зори», 1 этаж, левое крыло';
 
   static String addressTitleUi() => splitTitleInTwo(fixPrepositions(addressTitle));
   static String addressSubtitleUi() => fixPrepositions(addressSubtitle);
+  static String addressFullUi() => fixPrepositions(addressFull);
 
   static const yandexRouteUrl =
       'https://yandex.ru/maps/?pt=43.868429,56.350553&z=17&l=map';
