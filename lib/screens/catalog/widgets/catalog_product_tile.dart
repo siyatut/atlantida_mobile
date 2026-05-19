@@ -110,7 +110,7 @@ class _FavButton extends StatelessWidget {
         child: Icon(
           isFavorite ? Icons.favorite : Icons.favorite_outline,
           size: 22,
-          color: isFavorite ? AppColors.teal : AppColors.softInk,
+          color: isFavorite ? AppColors.teal : AppColors.deepBlue,
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../context/favorites_provider.dart';
+import '../../theme/app_colors.dart';
 import '../../utils/tab_scroll_padding.dart';
 import '../../widgets/page_header.dart';
 import '../catalog/widgets/catalog_product_tile.dart';
@@ -84,19 +85,18 @@ class _EmptyFavorites extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.favorite_border,
-              size: 64, color: cs.onSurface.withValues(alpha: .25)),
+              size: 64, color: AppColors.teal.withValues(alpha: .5)),
           const SizedBox(height: 16),
           Text(
             'Вы ещё не добавили\nтовары в избранное',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: cs.onSurface.withValues(alpha: .5),
+                  color: AppColors.teal.withValues(alpha: .7),
                   height: 1.4,
                 ),
           ),

@@ -64,7 +64,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                     ? Icons.favorite
                                     : Icons.favorite_outline,
                                 size: 22,
-                                color: isFav ? AppColors.teal : AppColors.softInk,
+                                color: isFav ? AppColors.teal : AppColors.deepBlue,
                               ),
                             );
                           },
