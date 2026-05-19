@@ -109,8 +109,10 @@ class ProductDetailsScreen extends StatelessWidget {
                             ),
                           ),
                         ],
-                        const SizedBox(height: 20),
-                        ProductDetailsDescriptionCard(text: description),
+                        if (description.isNotEmpty) ...[
+                          const SizedBox(height: 20),
+                          ProductDetailsDescriptionCard(text: description),
+                        ],
                         const SizedBox(height: 20),
                         Text(
                           'Остались вопросы?',
