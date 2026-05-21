@@ -13,7 +13,7 @@ class HomeContent {
   static const aboutTitle = 'Зоомагазин в Нижнем Новгороде';
 
   static const aboutText =
-      '11 лет опыта. 3 000+ наименований.\nЛюбовь к питомцам начинается здесь!';
+      '12 лет опыта. 3 000+ наименований.\nЛюбовь к питомцам начинается здесь!';
 
   static const qualityTitle = 'Качество и поставщики';
 
@@ -32,7 +32,7 @@ class HomeContent {
     HomeAdvantage(
       icon: Icons.attach_money,
       title: 'Держим низкие цены',
-      text: 'Более 11 лет предлагаем товары по доступным ценам.',
+      text: 'Более 12 лет предлагаем товары по доступным ценам.',
     ),
     HomeAdvantage(
       icon: Icons.inventory_2_outlined,
