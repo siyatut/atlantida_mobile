@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../context/favorites_provider.dart';
 import '../../core/constants/app_contacts.dart';
 import '../../domain/product.dart';
 import '../../theme/app_colors.dart';
@@ -20,7 +19,6 @@ class ProductDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
-    final favorites = FavoritesProvider.of(context);
 
     final description = fixPrepositions(
       cleanProductDescription(product.description),
@@ -50,26 +48,7 @@ class ProductDetailsScreen extends StatelessWidget {
                               size: 22, color: AppColors.deepBlue),
                         ),
                       ),
-                      Positioned(
-                        top: 8,
-                        right: 32,
-                        child: ListenableBuilder(
-                          listenable: favorites,
-                          builder: (context, _) {
-                            final isFav = favorites.isFavorite(product.id);
-                            return _FloatingButton(
-                              onTap: () => favorites.toggle(product),
-                              child: Icon(
-                                isFav
-                                    ? Icons.favorite
-                                    : Icons.favorite_outline,
-                                size: 22,
-                                color: isFav ? AppColors.teal : AppColors.deepBlue,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+
                     ],
                   ),
                   Padding(

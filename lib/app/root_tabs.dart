@@ -5,7 +5,6 @@ import '../theme/app_colors.dart';
 
 import '../screens/about/about_screen.dart';
 import '../screens/catalog/catalog_home_screen.dart';
-import '../screens/favorites/favorites_screen.dart';
 import '../screens/home/home_screen.dart';
 
 class _NavItem {
@@ -17,7 +16,6 @@ class _NavItem {
 const _navItems = [
   _NavItem(icon: Icons.home_outlined,       activeIcon: Icons.home),
   _NavItem(icon: Icons.storefront_outlined, activeIcon: Icons.storefront),
-  _NavItem(icon: Icons.favorite_outline,    activeIcon: Icons.favorite),
   _NavItem(icon: Icons.info_outline,        activeIcon: Icons.info),
 ];
 
@@ -87,10 +85,8 @@ class _RootTabsState extends State<RootTabs> {
     _pages = [
       HomeScreen(
         onOpenCatalog: () => setState(() => _index = 1),
-        onOpenFavorites: () => setState(() => _index = 2),
       ),
       CatalogHomeScreen(onGoHome: () => setState(() => _index = 0)),
-      FavoritesScreen(onGoHome: () => setState(() => _index = 0)),
       AboutScreen(
         onOpenCatalog: () => setState(() => _index = 1),
         onGoHome: () => setState(() => _index = 0),

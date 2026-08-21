@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../context/favorites_provider.dart';
 import '../../../domain/product.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/product_image_box.dart';
@@ -19,8 +18,6 @@ class CatalogProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final cs = Theme.of(context).colorScheme;
-    final favorites = FavoritesProvider.of(context);
-    final isFav = favorites.isFavorite(product.id);
 
     return GestureDetector(
       onTap: onOpenDetails,
@@ -39,27 +36,15 @@ class CatalogProductTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ProductImageBox(imageUrl: product.image, borderRadius: 0),
-                    ),
-                  ),
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: ProductImageBox(imageUrl: product.image, borderRadius: 0),
                 ),
-                Positioned(
-                  top: 4,
-                  right: 4,
-                  child: _FavButton(
-                    isFavorite: isFav,
-                    onTap: () => favorites.toggle(product),
-                  ),
-                ),
-              ],
+              ),
             ),
             Expanded(
               child: Padding(
@@ -84,33 +69,6 @@ class CatalogProductTile extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FavButton extends StatelessWidget {
-  const _FavButton({required this.isFavorite, required this.onTap});
-
-  final bool isFavorite;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: .85),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          isFavorite ? Icons.favorite : Icons.favorite_outline,
-          size: 22,
-          color: isFavorite ? AppColors.teal : AppColors.deepBlue,
         ),
       ),
     );

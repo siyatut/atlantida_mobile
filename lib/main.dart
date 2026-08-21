@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'context/favorites_provider.dart';
 import 'core/env.dart';
 import 'theme/app_theme.dart';
 import 'app/app_background.dart';
@@ -20,27 +19,16 @@ class AtlantidaApp extends StatefulWidget {
 }
 
 class _AtlantidaAppState extends State<AtlantidaApp> {
-  final _favorites = FavoritesNotifier();
-
-  @override
-  void dispose() {
-    _favorites.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FavoritesProvider(
-      notifier: _favorites,
-      child: MaterialApp(
-        title: 'Атлантида',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light(),
-        darkTheme: AppTheme.dark(),
-        builder: (context, child) =>
-            AppBackground(child: child ?? const SizedBox.shrink()),
-        home: const RootTabs(),
-      ),
+    return MaterialApp(
+      title: 'Атлантида',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      builder: (context, child) =>
+          AppBackground(child: child ?? const SizedBox.shrink()),
+      home: const RootTabs(),
     );
   }
 }

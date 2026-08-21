@@ -17,11 +17,9 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     this.onOpenCatalog,
-    this.onOpenFavorites,
   });
 
   final VoidCallback? onOpenCatalog;
-  final VoidCallback? onOpenFavorites;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -98,11 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                  ),
-                  IconButton(
-                    onPressed: widget.onOpenFavorites,
-                    icon: const Icon(Icons.favorite_outline,
-                        color: AppColors.softInk),
                   ),
                 ],
               ),
