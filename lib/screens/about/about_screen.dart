@@ -90,6 +90,14 @@ class AboutScreen extends StatelessWidget {
                         ),
                         gap8,
                         _ContactRow(
+                          icon: Icons.call_outlined,
+                          label: 'Телефон',
+                          value: ContactsContent.phones[1].phoneUi,
+                          onTap: () => makePhoneCall(
+                              ContactsContent.phones[1].tel),
+                        ),
+                        gap8,
+                        _ContactRow(
                           icon: Icons.email_outlined,
                           label: 'Email',
                           value: AppContacts.email,
